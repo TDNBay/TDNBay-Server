@@ -1,10 +1,10 @@
-import socket                   # Import socket module
+import socket
 
-port = 50000                    # Reserve a port for your service every new transfer wants a new port or you must wait.
-s = socket.socket()             # Create a socket object
-host = "localhost"   # Get local machine name
-s.bind((host, port))            # Bind to the port
-s.listen(5)                     # Now wait for client connection.
+port = 50000
+s = socket.socket()
+host = "localhost"
+s.bind((host, port))
+s.listen(5)
 
 print('Listening....')
 
