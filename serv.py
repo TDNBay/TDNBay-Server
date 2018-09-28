@@ -4,7 +4,7 @@ import struct
 
 port = 50000
 s = socket.socket()
-host = "localhost"
+host = "192.168.1.161"
 s.bind((host, port))
 s.listen(5)
 
@@ -16,18 +16,36 @@ while True:
     conn, addr = s.accept()
     print('Got connection from', addr)
     data = []
-    head = s.recv(1)[0]
+    head = conn.recv(1)[0]
+    print(head)
     if not head: #JSON
-        content_len = s.recv(s.recv(1)[0])
-        lenc = struct.unpack("I", bytearray(content_len))[0]
-        json_bytes = s.recv(lenc)
-        obj = json.loads(json_bytes.decode("utf-8"))
-        print(obj)
+        lennn = conn.recv(1)[0]
+        content_len = []
+        temp = conn.recv(lennn)
+        while True:
+            content_len += temp
+            if not len(content_len) - lennn:
+                break
+            temp = conn.recv(lennn)
 
+        lenc = int.from_bytes(content_len, byteorder='big', signed=False)
+        json_bytes = []
+        temp = conn.recv(lenc)
+        while True:
+            json_bytes += temp
+            if not len(json_bytes) - lenc:
+                break
+            temp = conn.recv(lenc)
+        obj = json.loads(str(bytearray(json_bytes), "utf-8"))
+        print(obj)
+    conn.send(bytes([1]))
+    lennbytes = struct.pack(">I", 1732821)
+    conn.send(bytes([len(lennbytes)]))
+    conn.send(lennbytes)
     filename='cyber.mp4'
     f = open(filename,'rb')
     l = f.read(1048576)
-    while (l):
+    while l:
        conn.send(l)
        l = f.read(1048576)
     f.close()
