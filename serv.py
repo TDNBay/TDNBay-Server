@@ -42,12 +42,12 @@ while True:
     lennbytes = struct.pack(">I", 1732821)
     conn.send(bytes([len(lennbytes)]))
     conn.send(lennbytes)
-    filename='cyber.mp4'
+    filename='impact.mp4'
     f = open(filename,'rb')
-    l = f.read(1048576)
+    l = f.read(8192)
     while l:
        conn.send(l)
-       l = f.read(1048576)
+       l = f.read(8192)
     f.close()
     print('Done sending')
     conn.close()
