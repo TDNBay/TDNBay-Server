@@ -1,7 +1,10 @@
 from request_parser.filehandler import FileRequestHandler
+from request_parser.filelisthandler import FileListHandler
+from request_parser.fileuploadhandler import FileUploadHandler
 
 FILE_GET = 'fileget'
 FILE_LIST = 'filelist'
+FILE_UPLOAD = 'fileupload'
 
 class RequestRouter:
 
@@ -15,3 +18,5 @@ class RequestRouter:
                 return FileRequestHandler(self.client, self.parsed_data)
             if self.parsed_data['action'] == FILE_LIST:
                 return FileListHandler(self.client, self.parsed_data)
+            if self.parsed_data['action'] == FILE_UPLOAD:
+                return FileUploadHandler(self.client, self.parsed_data)

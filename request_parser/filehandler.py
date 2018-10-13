@@ -13,12 +13,13 @@ class FileRequestHandler:
     def handle_request(self):
         file_id = int(self.parsed_data['detail'])
         file_name = utils.file_name_by_id(file_id)
+        utils.increase_video_view_count(file_id)
         print("Enviando", file_name, "...")
         self.client.send(bytes([1]))
-        lennbytes = struct.pack(">I", os.path.getsize(file_name))
+        lennbytes = struct.pack(">I", os.path.getsize('files/' + file_name))
         self.client.send(bytes([len(lennbytes)]))
         self.client.send(lennbytes)
-        f = open(file_name, 'rb')
+        f = open('files/' + file_name, 'rb')
         l = f.read(16384)
         while l:
             self.client.send(l)

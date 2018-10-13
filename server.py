@@ -1,5 +1,6 @@
 import logging
 import socket
+import subprocess
 import traceback
 from threading import Thread
 
@@ -16,8 +17,9 @@ class Server:
         self.s.bind((host, port))
 
     def listen(self):
+        Thread(target=self.runImageServer).start()
         self.s.listen(5)
-        print("Servidor em execução.")
+        print("Servidor em execução na porta", self.port)
         while True:
             try:
                 cli, addr = self.s.accept()
@@ -35,6 +37,10 @@ class Server:
         router = RequestRouter(parsed, client)
         handler = router.route()
         handler.handle_request()
+        client.close()
+
+    def runImageServer(self):
+        subprocess.run(["python", "-m", "http.server"])
 
 
 
